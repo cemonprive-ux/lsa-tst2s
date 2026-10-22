@@ -165,7 +165,18 @@ footer{background:var(--navy-deep);color:rgba(255,255,255,.62);margin-top:42px;b
   .card-thumb::after{background:linear-gradient(0deg,rgba(26,39,68,.25),transparent 60%);}
 }
 </style>
-<style>.visit-count{margin-top:8px}.visit-count img{height:16px;vertical-align:middle}</style></head>
+<style>.visit-count{margin-top:8px}.visit-count img{height:16px;vertical-align:middle}</style><style>
+/* Accès direct à une ressource (lien #id depuis l'accueil) */
+html.gk-solo .fmt-group:not(.gk-target){display:none;}
+html.gk-solo .fmt-group.gk-target>summary{display:none;}
+html.gk-solo .fmt-group.gk-target{margin-bottom:0;}
+html.gk-solo .fmt-body{padding-top:0;}
+html.gk-solo .res:not(.gk-current){display:none;}
+.gk-all{display:none;}
+html.gk-solo .gk-all{display:inline-flex;align-items:center;gap:8px;margin:0 0 26px;font-weight:700;font-size:14px;color:var(--navy);text-decoration:none;border-bottom:2px solid var(--accent);padding-bottom:2px;}
+html.gk-solo .gk-all:hover{color:var(--blue);}
+</style>
+</head>
 <body>
 
 <!-- TOP BAR -->
@@ -196,7 +207,9 @@ footer{background:var(--navy-deep);color:rgba(255,255,255,.62);margin-top:42px;b
 <!-- RESOURCES -->
 <main class="wrap">
 
-  <details class="fmt-group"><summary class="fmt"><h2 class="fmt-title">Vidéos</h2><span class="fmt-count">2</span><svg class="fmt-chev" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div class="fmt-body"><section class="res">
+  <a class="gk-all" href="general-knowledge-terminale.html">← Toutes les ressources General Knowledge</a>
+
+  <details class="fmt-group"><summary class="fmt"><h2 class="fmt-title">Vidéos</h2><span class="fmt-count">2</span><svg class="fmt-chev" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div class="fmt-body"><section class="res" id="gb-vs-uk">
     <div class="res-head">
       <span class="idx">1</span>
       <div>
@@ -208,7 +221,7 @@ footer{background:var(--navy-deep);color:rgba(255,255,255,.62);margin-top:42px;b
     <div class="video short">
       <iframe src="https://www.youtube.com/embed/xoP0HYz5oUE" title="GB vs UK" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
-  </section><section class="res">
+  </section><section class="res" id="nhs">
     <div class="res-head">
       <span class="idx">2</span>
       <div>
@@ -224,7 +237,7 @@ footer{background:var(--navy-deep);color:rgba(255,255,255,.62);margin-top:42px;b
   </section>
 
 </div></details>
-<details class="fmt-group"><summary class="fmt"><h2 class="fmt-title">Podcasts</h2><span class="fmt-count">1</span><svg class="fmt-chev" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div class="fmt-body"><section class="res">
+<details class="fmt-group"><summary class="fmt"><h2 class="fmt-title">Podcasts</h2><span class="fmt-count">1</span><svg class="fmt-chev" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><div class="fmt-body"><section class="res" id="fifty-states">
     <div class="res-head">
       <span class="idx">3</span>
       <div>
@@ -245,6 +258,29 @@ footer{background:var(--navy-deep);color:rgba(255,255,255,.62);margin-top:42px;b
   </div>
 
 </main>
+
+<script>
+(function(){
+  var back=document.querySelector('.topbar .back'),foot=document.querySelector('.tofoot a');
+  function apply(){
+    var id=decodeURIComponent((location.hash||'').slice(1));
+    var root=document.documentElement;
+    [].forEach.call(document.querySelectorAll('.gk-target,.gk-current'),function(n){n.classList.remove('gk-target','gk-current')});
+    var res=id&&document.querySelector('section.res[id="'+id.replace(/"/g,'')+'"]');
+    var to=res?'index.html#culture':'index.html';
+    [back,foot].forEach(function(a){if(a)a.setAttribute('href',to)});
+    if(!res){root.classList.remove('gk-solo');return}
+    var grp=res.closest('details');
+    if(grp){grp.open=true;grp.classList.add('gk-target')}
+    res.classList.add('gk-current');
+    root.classList.add('gk-solo');
+    document.title=res.querySelector('h2').textContent+' · General Knowledge';
+    window.scrollTo(0,0);
+  }
+  apply();
+  addEventListener('hashchange',apply);
+})();
+</script>
 
 <!-- FOOTER -->
 <footer>
