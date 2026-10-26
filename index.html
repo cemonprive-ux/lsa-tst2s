@@ -30,7 +30,7 @@ svg{flex-shrink:0}
 .top .ib{width:44px;height:44px;border-radius:10px;border:none;background:transparent;color:#fff;display:flex;align-items:center;justify-content:center}
 .top .ib:active{background:rgba(255,255,255,.12)}
 main{padding:12px 16px calc(var(--tab) + 28px + env(safe-area-inset-bottom));max-width:1180px;width:100%;margin:0 auto}
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--navy-deep);border-top:3px solid var(--accent);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));padding-bottom:env(safe-area-inset-bottom)}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--navy-deep);border-top:3px solid var(--accent);display:grid;grid-template-columns:repeat(6,minmax(0,1fr));padding-bottom:env(safe-area-inset-bottom)}
 .tabs a{height:var(--tab);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:rgba(255,255,255,.7);font-size:11px;font-weight:600}
 .tabs a.on{color:var(--accent)}.tabs .tbot{width:24px;height:24px;object-fit:contain;opacity:.72}.tabs a{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:10.5px}
 /* ── common ── */
@@ -158,11 +158,12 @@ voc:'<rect x="3" y="6" width="14" height="10" rx="2"/><path d="M21 8v8"/>',
 vid:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3Z"/>',
 pod:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
 ppl:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+check:'<path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/>',
 leaf:'<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/>',
 arr:'<path d="M9 6l6 6-6 6"/>',left:'<path d="M15 18l-6-6 6-6"/>',play:'<path d="M5 12h14M13 6l6 6-6 6"/>'
 };
 const ic=(n,s=20,w=2)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${I[n]}</svg>`;
-const T={ph:'Phonologie',voc:'Vocabulaire',vid:'Vidéo',pod:'Podcast'};
+const T={ph:'Phonologie',voc:'Vocabulaire',vid:'Vidéo',pod:'Podcast',test:'Test'};
 const PH=[
 {k:'ph',t:"M2-Phonologie : mode d'emploi",d:"Présentation sonore du code couleur : à quoi sert chaque couleur et comment s'entraîner.",h:'M2%20-%20Phonologie%20Code%20Couleur%20-%20presentation%20ST2S.html'},
 {k:'ph',t:'M2-Phonologie code couleur',d:"Méthode du code couleur pour travailler la prononciation en autonomie.",h:'code-couleur-st2s.html'},
@@ -173,11 +174,13 @@ const GK=[
 {g:'Vidéos',k:'vid',t:'GB vs UK',h:'general-knowledge-terminale.html#gb-vs-uk'},
 {g:'Vidéos',k:'vid',t:'Reportage sur la NHS',h:'general-knowledge-terminale.html#nhs'},
 {g:'Podcasts',k:'pod',t:'Fifty States',h:'general-knowledge-terminale.html#fifty-states'}];
-const ALL=[...PH.map(x=>({...x,ct:'Phonologie'})),...VO.map(x=>({...x,ct:'Vocabulaire'})),...GK.map(x=>({...x,ct:'General Knowledge'}))];
-const TABS=[['home','Accueil','home'],['phonologie','Phonologie','pod'],['vocabulaire','Vocabulaire','voc'],['culture','Culture G','globe']];
+/* Rubrique Tests : à alimenter. Format : {k:'test',t:'Titre',d:'Description',h:'page.html'} */
+const TE=[];
+const ALL=[...PH.map(x=>({...x,ct:'Phonologie'})),...VO.map(x=>({...x,ct:'Vocabulaire'})),...GK.map(x=>({...x,ct:'General Knowledge'})),...TE.map(x=>({...x,ct:'Tests'}))];
+const TABS=[['home','Accueil','home'],['phonologie','Phonologie','pod'],['vocabulaire','Vocabulaire','voc'],['culture','Culture G','globe'],['tests','Tests','check']];
 const route=()=>(location.hash.slice(1)||'home').split('/');
 document.addEventListener('click',e=>{const a=e.target.closest('a[data-t]');if(a)try{localStorage.setItem('tst2s-last',JSON.stringify({t:a.dataset.t,h:a.getAttribute('href')}))}catch(_){}});
-const cls={ph:'sum',voc:'voc',vid:'vid',pod:'vid'},ico={ph:'pod',voc:'voc',vid:'vid',pod:'pod'};
+const cls={ph:'sum',voc:'voc',vid:'vid',pod:'vid',test:'ess'},ico={ph:'pod',voc:'voc',vid:'vid',pod:'pod',test:'check'};
 const row=x=>`<a class="r" href="${x.h}" data-t="${x.t.replace(/"/g,'&quot;')}"><span class="ic ${cls[x.k]}">${ic(ico[x.k],19)}</span><span><small>${T[x.k]}</small><b>${x.t}</b>${x.d?`<em class="dsc">${x.d}</em>`:''}</span><span class="ar">${ic('arr',18,2.4)}</span></a>`;
 const block=(id,title,n,items)=>`<div class="sec"><h2>${title}</h2><a href="#${id}">${n}</a></div><div class="res gridres compact">${items.map(row).join('')}</div>`;
 const foot=`<footer class="foot"><img class="l" src="assets/lsa-logo.png" alt="Logo LSA"><span>Lycée Sidoine Apollinaire · Mme Huet</span><div class="visit-count" id="visitCount"></div></footer>`;
@@ -191,6 +194,7 @@ ${block('phonologie','M2-Phonologie','3 fiches',PH)}${block('vocabulaire','M4-Vo
 phonologie(){return `<h1>M2-Phonologie</h1><p class="lead">Le code couleur des sons voyelles et l'entraînement à la prononciation avec retour de l'IA.</p><div class="res" style="margin-top:16px">${PH.map(row).join('')}</div>`},
 vocabulaire(){return `<h1>M4-Vocabulaire</h1><p class="lead">Cours PDF, flashcards, QCM en contexte et phrases à compléter.</p><div class="res" style="margin-top:16px">${VO.map(row).join('')}</div>`},
 culture(){const gs=[...new Set(GK.map(x=>x.g))];return `<h1>General Knowledge</h1>${gs.map(g=>`<div class="sec"><h2>${g}</h2></div><div class="res gridres">${GK.filter(x=>x.g===g).map(row).join('')}</div>`).join('')}`},
+tests(){return `<h1>Tests</h1><p class="lead">Évaluations et entraînements en ligne.</p>`+(TE.length?`<div class="res" style="margin-top:16px">${TE.map(row).join('')}</div>`:`<p class="empty">Cette rubrique sera bientôt alimentée.</p>`)},
 recherche(){return `<h1>Recherche</h1><label class="sbox" style="margin-top:16px">${ic('search')}<input id="q" type="search" placeholder="Phonologie, connecteurs, culture G…" autocomplete="off"></label><div id="out" class="res" style="margin-top:14px"></div>`}
 };
 function chrome(cur){
