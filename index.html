@@ -174,9 +174,12 @@ const GK=[
 {g:'Vidéos',k:'vid',t:'GB vs UK',h:'general-knowledge-terminale.html#gb-vs-uk'},
 {g:'Vidéos',k:'vid',t:'Reportage sur la NHS',h:'general-knowledge-terminale.html#nhs'},
 {g:'Podcasts',k:'pod',t:'Fifty States',h:'general-knowledge-terminale.html#fifty-states'}];
-/* Rubrique Tests : à alimenter. Format : {k:'test',t:'Titre',d:'Description',h:'page.html'} */
-const TE=[];
-const ALL=[...PH.map(x=>({...x,ct:'Phonologie'})),...VO.map(x=>({...x,ct:'Vocabulaire'})),...GK.map(x=>({...x,ct:'General Knowledge'})),...TE.map(x=>({...x,ct:'Tests'}))];
+/* Rubrique Tests : à alimenter. Format : {k:'test',t:'Titre',d:'Description',h:'adresse',from:'date ISO avec décalage'} ; « from » = date et heure d'apparition (facultatif) */
+const TE=[
+{k:'test',t:'Test Vocabulaire 1 – Ch1 · TSTS3',d:'Lundi 9 novembre 2026, 8 h 00 à 8 h 40 · 40 minutes · 20 questions.',h:'https://tsts3-vocabulaire-1.cemonprive.workers.dev',from:'2026-11-09T07:30:00+01:00'}
+];
+const TS=TE.filter(x=>!x.from||Date.now()>=Date.parse(x.from));
+const ALL=[...PH.map(x=>({...x,ct:'Phonologie'})),...VO.map(x=>({...x,ct:'Vocabulaire'})),...GK.map(x=>({...x,ct:'General Knowledge'})),...TS.map(x=>({...x,ct:'Tests'}))];
 const TABS=[['home','Accueil','home'],['phonologie','Phonologie','pod'],['vocabulaire','Vocabulaire','voc'],['culture','Culture G','globe'],['tests','Tests','check']];
 const route=()=>(location.hash.slice(1)||'home').split('/');
 document.addEventListener('click',e=>{const a=e.target.closest('a[data-t]');if(a)try{localStorage.setItem('tst2s-last',JSON.stringify({t:a.dataset.t,h:a.getAttribute('href')}))}catch(_){}});
@@ -194,7 +197,7 @@ ${block('phonologie','M2-Phonologie','3 fiches',PH)}${block('vocabulaire','M4-Vo
 phonologie(){return `<h1>M2-Phonologie</h1><p class="lead">Le code couleur des sons voyelles et l'entraînement à la prononciation avec retour de l'IA.</p><div class="res" style="margin-top:16px">${PH.map(row).join('')}</div>`},
 vocabulaire(){return `<h1>M4-Vocabulaire</h1><p class="lead">Cours PDF, flashcards, QCM en contexte et phrases à compléter.</p><div class="res" style="margin-top:16px">${VO.map(row).join('')}</div>`},
 culture(){const gs=[...new Set(GK.map(x=>x.g))];return `<h1>General Knowledge</h1>${gs.map(g=>`<div class="sec"><h2>${g}</h2></div><div class="res gridres">${GK.filter(x=>x.g===g).map(row).join('')}</div>`).join('')}`},
-tests(){return `<h1>Tests</h1><p class="lead">Évaluations et entraînements en ligne.</p>`+(TE.length?`<div class="res" style="margin-top:16px">${TE.map(row).join('')}</div>`:`<p class="empty">Cette rubrique sera bientôt alimentée.</p>`)},
+tests(){return `<h1>Tests</h1><p class="lead">Évaluations et entraînements en ligne.</p>`+(TS.length?`<div class="res" style="margin-top:16px">${TS.map(row).join('')}</div>`:`<p class="empty">Cette rubrique sera bientôt alimentée.</p>`)},
 recherche(){return `<h1>Recherche</h1><label class="sbox" style="margin-top:16px">${ic('search')}<input id="q" type="search" placeholder="Phonologie, connecteurs, culture G…" autocomplete="off"></label><div id="out" class="res" style="margin-top:14px"></div>`}
 };
 function chrome(cur){
