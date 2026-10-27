@@ -176,8 +176,8 @@ const GK=[
 {g:'Podcasts',k:'pod',t:'Fifty States',h:'general-knowledge-terminale.html#fifty-states'}];
 /* Rubrique Tests : à alimenter. Format : {k:'test',t:'Titre',d:'Description',h:'adresse',from:'date ISO avec décalage'} ; « from » = date et heure d'apparition (facultatif) */
 const TE=[
-{k:'test',t:'Test Vocabulaire 1 – Ch1 · TSTS3',d:'Lundi 9 novembre 2026, 8 h 00 à 8 h 40 · 40 minutes · 20 questions.',h:'https://tsts3-vocabulaire-1.cemonprive.workers.dev',from:'2026-11-09T07:30:00+01:00'},
-{k:'test',t:'Test Vocabulaire 1 – Ch1 · TSTS5',d:'Mardi 10 novembre 2026, 15 h 00 à 15 h 40 · 40 minutes · 20 questions.',h:'https://tsts5-vocabulaire-1.cemonprive.workers.dev',from:'2026-11-10T14:45:00+01:00'}
+{k:'test',t:'TSTS3 · Test Vocabulaire 1 – Ch1',d:'Lundi 9 novembre 2026, 8 h 00 à 8 h 40 · 40 minutes · 20 questions.',h:'https://tsts3-vocabulaire-1.cemonprive.workers.dev',from:'2026-11-09T07:30:00+01:00'},
+{k:'test',t:'TSTS5 · Test Vocabulaire 1 – Ch1',d:'Mardi 10 novembre 2026, 15 h 00 à 15 h 40 · 40 minutes · 20 questions.',h:'https://tsts5-vocabulaire-1.cemonprive.workers.dev',from:'2026-11-10T14:45:00+01:00'}
 ];
 const TS=TE.filter(x=>!x.from||Date.now()>=Date.parse(x.from));
 const ALL=[...PH.map(x=>({...x,ct:'Phonologie'})),...VO.map(x=>({...x,ct:'Vocabulaire'})),...GK.map(x=>({...x,ct:'General Knowledge'})),...TS.map(x=>({...x,ct:'Tests'}))];
