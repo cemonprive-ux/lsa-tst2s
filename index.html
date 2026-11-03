@@ -163,7 +163,7 @@ leaf:'<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5
 arr:'<path d="M9 6l6 6-6 6"/>',left:'<path d="M15 18l-6-6 6-6"/>',play:'<path d="M5 12h14M13 6l6 6-6 6"/>'
 };
 const ic=(n,s=20,w=2)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${I[n]}</svg>`;
-const T={ph:'Phonologie',voc:'Vocabulaire',vid:'Vidéo',pod:'Podcast',test:'Test'};
+const T={ph:'Phonologie',voc:'Vocabulaire',vid:'Vidéo',pod:'Podcast',art:'Article',test:'Test'};
 const PH=[
 {k:'ph',t:"M2-Phonologie : mode d'emploi",d:"Présentation sonore du code couleur : à quoi sert chaque couleur et comment s'entraîner.",h:'M2%20-%20Phonologie%20Code%20Couleur%20-%20presentation%20ST2S.html'},
 {k:'ph',t:'M2-Phonologie code couleur',d:"Méthode du code couleur pour travailler la prononciation en autonomie.",h:'code-couleur-st2s.html'},
@@ -173,7 +173,8 @@ const VO=[
 const GK=[
 {g:'Vidéos',k:'vid',t:'GB vs UK',h:'general-knowledge-terminale.html#gb-vs-uk'},
 {g:'Vidéos',k:'vid',t:'Reportage sur la NHS',h:'general-knowledge-terminale.html#nhs'},
-{g:'Podcasts',k:'pod',t:'Fifty States',h:'general-knowledge-terminale.html#fifty-states'}];
+{g:'Podcasts',k:'pod',t:'Fifty States',h:'general-knowledge-terminale.html#fifty-states'},
+{g:'Articles',k:'art',t:'Midterms 2026: Who Will Control Congress?',d:'Les élections de mi-mandat américaines du 3 novembre 2026 : enjeux, sièges en jeu et rapports de force au Congrès.',h:'midterms-2026.html'}];
 /* Rubrique Tests : à alimenter. Format : {k:'test',t:'Titre',d:'Description',h:'adresse',from:'date ISO avec décalage'} ; « from » = date et heure d'apparition (facultatif) */
 const TE=[
 {k:'test',t:'TSTS3 · Test Vocabulaire 1 – Ch1',d:'Lundi 9 novembre 2026, 8 h 00 à 8 h 40 · 40 minutes · 20 questions.',h:'https://tsts3-vocabulaire-1.cemonprive.workers.dev',from:'2026-11-09T07:30:00+01:00'},
@@ -184,7 +185,7 @@ const ALL=[...PH.map(x=>({...x,ct:'Phonologie'})),...VO.map(x=>({...x,ct:'Vocabu
 const TABS=[['home','Accueil','home'],['phonologie','Phonologie','pod'],['vocabulaire','Vocabulaire','voc'],['culture','Culture G','globe'],['tests','Tests','check']];
 const route=()=>(location.hash.slice(1)||'home').split('/');
 document.addEventListener('click',e=>{const a=e.target.closest('a[data-t]');if(a)try{localStorage.setItem('tst2s-last',JSON.stringify({t:a.dataset.t,h:a.getAttribute('href')}))}catch(_){}});
-const cls={ph:'sum',voc:'voc',vid:'vid',pod:'vid',test:'ess'},ico={ph:'pod',voc:'voc',vid:'vid',pod:'pod',test:'check'};
+const cls={ph:'sum',voc:'voc',vid:'vid',pod:'vid',art:'ess',test:'ess'},ico={ph:'pod',voc:'voc',vid:'vid',pod:'pod',art:'read',test:'check'};
 const row=x=>`<a class="r" href="${x.h}" data-t="${x.t.replace(/"/g,'&quot;')}"><span class="ic ${cls[x.k]}">${ic(ico[x.k],19)}</span><span><small>${T[x.k]}</small><b>${x.t}</b>${x.d?`<em class="dsc">${x.d}</em>`:''}</span><span class="ar">${ic('arr',18,2.4)}</span></a>`;
 const block=(id,title,n,items)=>`<div class="sec"><h2>${title}</h2><a href="#${id}">${n}</a></div><div class="res gridres compact">${items.map(row).join('')}</div>`;
 const foot=`<footer class="foot"><img class="l" src="assets/lsa-logo.png" alt="Logo LSA"><span>Lycée Sidoine Apollinaire · Mme Huet</span><div class="visit-count" id="visitCount"></div></footer>`;
