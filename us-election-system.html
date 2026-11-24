@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0f1a33"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Comment fonctionne le système électoral américain</title>
+<style>
+:root{
+  --navy:#101a33; --navy2:#1b2a52; --cream:#f6f1e7; --paper:#fffdf8; --ink:#17203a; --mute:#5b6478;
+  --d:#1f5fd1; --d-soft:#dbe7fb; --r:#c62b2b; --r-soft:#f8dcdc; --gold:#f2b705; --line:#e3dccb;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font:17px/1.65 "Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+h1,h2,h3,.serif{font-family:Georgia,"Times New Roman",serif}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+.narrow{max-width:680px;margin:0 auto}
+
+/* HERO */
+header.hero{background:var(--navy);color:#fff;position:relative;overflow:hidden;padding:56px 0 0}
+header.hero::before{content:"";position:absolute;inset:0;
+  background:
+   radial-gradient(circle at 15% 20%,rgba(31,95,209,.45),transparent 45%),
+   radial-gradient(circle at 85% 30%,rgba(198,43,43,.40),transparent 45%);}
+header.hero::after{content:"★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★";position:absolute;top:14px;left:0;right:0;text-align:center;
+  letter-spacing:.9em;font-size:12px;color:rgba(255,255,255,.18);white-space:nowrap;overflow:hidden}
+.hero .wrap{position:relative;z-index:1}
+.kicker{display:inline-flex;gap:10px;align-items:center;background:var(--gold);color:#241a00;font-weight:800;
+  letter-spacing:.14em;font-size:12px;text-transform:uppercase;padding:6px 12px;border-radius:999px}
+
+@keyframes pulse{50%{opacity:.25}}
+h1{font-size:clamp(34px,6.4vw,66px);line-height:1.04;margin:18px 0 14px;letter-spacing:-.02em}
+h1 em{font-style:normal;background:linear-gradient(90deg,#6ea2ff,#ff7b7b);-webkit-background-clip:text;background-clip:text;color:transparent}
+.standfirst{font-size:clamp(18px,2.4vw,23px);max-width:720px;color:#d7def0;margin:0 0 34px;line-height:1.5}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:34px}
+.chip{font-size:13px;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:4px 12px;color:#e6ebf8}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.14);border-radius:16px 16px 0 0;overflow:hidden}
+.stat{background:rgba(16,26,51,.88);padding:22px 16px;text-align:center}
+.stat b{display:block;font:800 clamp(28px,5vw,46px)/1 Georgia,serif;color:#fff}
+.stat span{font-size:13px;color:#aeb9d6;text-transform:uppercase;letter-spacing:.08em}
+
+/* SECTIONS */
+section{padding:56px 0 8px}
+.tag{font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--r)}
+h2{font-size:clamp(26px,4vw,38px);line-height:1.12;margin:6px 0 16px;letter-spacing:-.01em}
+p.art{margin:0 0 16px}
+p.art:first-of-type::first-letter{}
+.lead::first-letter{font:700 3.2em/.85 Georgia,serif;float:left;padding:6px 10px 0 0;color:var(--navy2)}
+
+.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 8px 24px rgba(16,26,51,.06);margin:26px 0}
+.card h3{margin:0 0 4px;font-size:20px}
+.card .sub{margin:0 0 16px;color:var(--mute);font-size:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+.grid2 .card{margin:26px 0 0}
+
+/* bars */
+.bar{display:flex;height:34px;border-radius:10px;overflow:hidden;background:#e9e4d6}
+.bar>i{display:block;height:100%;width:var(--w);transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.js .bar>i{width:0}
+.js .in .bar>i,.js .bar.in>i{width:var(--w)}
+.bd{background:var(--d)} .br{background:var(--r)} .bg{background:#bdb7a6}
+.hatch{background:repeating-linear-gradient(45deg,var(--d) 0 5px,#fff 5px 9px);outline:2px solid var(--d);outline-offset:-2px}
+.lbl{display:flex;justify-content:space-between;font-weight:700;margin:6px 0 0;font-size:15px}
+.lbl .d{color:var(--d)} .lbl .r{color:var(--r)}
+.big{font:800 44px/1 Georgia,serif}
+.big small{font:600 14px "Segoe UI",sans-serif;color:var(--mute);margin-left:6px}
+
+/* seat charts */
+.hemi{position:relative}
+.hemi svg{width:100%;height:auto;display:block}
+.hemi circle{opacity:0;animation:pop .5s forwards}
+/* surligneur */
+mark.hl{color:inherit;padding:.02em .14em;margin:0 -.14em;border-radius:.3em .7em .35em .8em / .8em .3em .7em .35em;
+  background-color:transparent;
+  background-image:linear-gradient(103deg,rgba(255,222,40,0) 0,rgba(255,222,40,.92) 1.6%,rgba(255,210,0,.78) 42%,rgba(255,224,60,.88) 96%,rgba(255,222,40,0) 100%),
+                   linear-gradient(97deg,rgba(255,238,110,0) 0,rgba(255,238,110,.6) 3%,rgba(255,238,110,.35) 62%,rgba(255,238,110,0) 100%);
+  background-repeat:no-repeat;background-position:0 90%,2% 40%;background-size:100% 64%,98% 40%;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone}
+.js mark.hl{background-size:0% 64%,0% 40%;transition:background-size .85s cubic-bezier(.35,.55,.2,1) var(--d,0s)}
+.js mark.hl.on{background-size:100% 64%,98% 40%}
+@media(prefers-reduced-motion:reduce){.js mark.hl{background-size:100% 64%,98% 40%!important;transition:none!important}}
+.hemi .dl{fill:#8fb2ee;stroke:var(--d);stroke-width:1.4} .hemi .o{fill:#e9a3a3}
+.hemi .d{fill:var(--d)} .hemi .r{fill:var(--r)} .hemi .v{fill:#c9c3b2} .hemi .i{fill:#f08c8c;stroke:var(--r);stroke-width:1.4}
+@keyframes pop{from{opacity:0;transform:scale(.3)}to{opacity:1}}
+.hemi .centre{position:absolute;left:0;right:0;bottom:6%;text-align:center}
+.hemi .centre b{font:800 clamp(26px,5vw,40px)/1 Georgia,serif;display:block}
+.hemi .centre span{font-size:13px;color:var(--mute);text-transform:uppercase;letter-spacing:.08em}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--mute);margin-top:6px}
+.legend span::before{content:"";display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;background:var(--c);vertical-align:-1px}
+.need{margin-top:14px;padding:12px 14px;border-radius:12px;background:var(--d-soft);font-size:15px}
+.need b{color:var(--d)}
+
+/* ballot squares */
+.sq{display:grid;grid-template-columns:repeat(25,1fr);gap:3px}
+.sq i{aspect-ratio:1;border-radius:3px;background:#e4dfd0}
+.sq i.on{background:var(--navy2)}
+.sq.house i{background:var(--navy2)}
+.cap{font-size:14px;color:var(--mute);margin-top:8px}
+
+/* ring */
+.ring{width:150px;height:150px;position:relative;margin:0 auto}
+.ring svg{transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:16}
+.ring .bgc{stroke:#e9e4d6}
+.ring .fg{stroke:var(--r);stroke-linecap:round;stroke-dasharray:var(--len) 999;transition:stroke-dasharray 1.4s}
+.js .ring .fg{stroke-dasharray:0 999}
+.js .in .ring .fg,.js .ring.in .fg{stroke-dasharray:var(--len) 999}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font:800 38px Georgia,serif}
+
+/* hbar rows */
+.row{margin:10px 0}
+.row .t{display:flex;justify-content:space-between;font-size:14px;font-weight:600;margin-bottom:3px}
+.row .bar{height:22px;border-radius:8px}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.pill{background:var(--navy);color:#fff;border-radius:999px;padding:8px 14px;font-size:14px;font-weight:600}
+.pill small{display:block;font-weight:400;color:#aeb9d6;font-size:12px}
+
+/* redistricting */
+.seesaw{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;text-align:center}
+.five{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.five i{aspect-ratio:1;border-radius:6px}
+.five.r i{background:var(--r)} .five.d i{background:var(--d)}
+.seesaw .eq{font:800 44px Georgia,serif;color:var(--mute)}
+.seesaw h4{margin:8px 0 0;font-size:16px}
+.seesaw p{margin:0;font-size:13px;color:var(--mute)}
+
+/* senate cards */
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.sc{background:var(--paper);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+.sc .top{background:var(--navy);color:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center}
+.sc .top b{font:800 26px Georgia,serif}
+.sc .top span{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#aeb9d6;text-align:right;line-height:1.2}
+.sc .vs{padding:12px 14px;font-size:14px;flex:1}
+.sc .vs div{display:flex;align-items:center;gap:8px;margin:3px 0}
+.sc .vs div::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--c)}
+.sc .note{padding:0 14px 12px;font-size:12.5px;color:var(--mute)}
+.sc.flip .top{background:linear-gradient(90deg,var(--navy),#5a1c1c)}
+
+.watch{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.watch .w{background:var(--paper);border:1px solid var(--line);border-left:6px solid var(--gold);border-radius:12px;padding:14px}
+.watch .w b{display:block;font-family:Georgia,serif;font-size:18px}
+.watch .w span{font-size:14px;color:var(--mute)}
+
+
+/* institutions & camps */
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.br3{border-top:6px solid var(--navy2);background:#fff;border-radius:12px;padding:14px;border:1px solid var(--line);border-top:6px solid var(--navy2)}
+.br3 .ic{font-size:26px}.br3 b{display:block;font-family:Georgia,serif;font-size:18px;margin:2px 0}
+.br3 span{font-size:14px;color:var(--mute)}
+.chamber .head{display:flex;align-items:baseline;gap:10px}
+.chamber .num{font:800 64px/1 Georgia,serif;color:var(--navy2)}
+.facts{list-style:none;margin:12px 0 0;padding:0}
+.facts li{display:flex;gap:10px;padding:9px 0;border-top:1px dashed var(--line);font-size:15px}
+.facts li i{font-style:normal;width:26px;flex:none;text-align:center}
+.facts li b{color:var(--navy2)}
+.vs3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;align-items:start}
+.vs3 h4{margin:0 0 6px;font-size:15px}
+.vs3 .st{display:grid;grid-template-columns:repeat(13,1fr);gap:3px}
+.vs3 .st i{aspect-ratio:1;border-radius:3px;background:var(--navy2)}
+.vs3 .st.s i{background:var(--gold);grid-column:auto;width:100%}
+.vs3 .st.one{grid-template-columns:repeat(13,1fr)}
+.vs3 .row2{display:flex;justify-content:space-between;font-size:14px;margin:6px 0 4px}
+.vs3 .blk{padding:10px 0}
+.vs3 small{color:var(--mute);font-size:12px;font-weight:400}
+.tagbox{display:inline-block;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--navy2)}
+.tagbox.fix{background:var(--gold);color:#241a00}
+.camp{border-radius:18px;overflow:hidden;background:var(--paper);border:1px solid var(--line);box-shadow:0 8px 24px rgba(16,26,51,.06)}
+.camp .ch{padding:18px 20px;color:#fff;display:flex;align-items:center;gap:14px}
+.camp.rep .ch{background:linear-gradient(90deg,#8e1b1b,var(--r))}
+.camp.dem .ch{background:linear-gradient(90deg,#143f91,var(--d))}
+.camp .badge{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.6);display:grid;place-items:center;font:800 16px Georgia,serif}
+.camp .ch h3{margin:0;font-size:24px}.camp .ch small{opacity:.85;font-size:13px}
+.camp .cb{padding:16px 20px 20px}
+.camp h5{margin:0 0 8px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.vals{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.vals span{border-radius:999px;padding:6px 12px;font-size:14px;font-weight:600}
+.rep .vals span{background:var(--r-soft);color:#7c1616}.dem .vals span{background:var(--d-soft);color:#143f91}
+.ppl{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pp{display:flex;gap:10px;align-items:center;font-size:14px;line-height:1.25}
+.pp i{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font:700 14px Georgia,serif;color:#fff;font-style:normal}
+.rep .pp i{background:var(--r)}.dem .pp i{background:var(--d)}
+.pp b{display:block}.pp span{color:var(--mute);font-size:12.5px}
+@media(max-width:820px){.three{grid-template-columns:1fr}.vs3{grid-template-columns:1fr}.ppl{grid-template-columns:1fr}}
+
+
+/* animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.js header.hero .wrap>*{animation:fadeUp .8s both}
+.js header.hero .wrap>*:nth-child(2){animation-delay:.1s}
+.js header.hero .wrap>*:nth-child(3){animation-delay:.25s}
+.js header.hero .wrap>*:nth-child(4){animation-delay:.4s}
+.js .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+.js .reveal.in{opacity:1;transform:none}
+.js .pop{opacity:0;transform:translateY(14px) scale(.94);transition:opacity .5s ease,transform .5s cubic-bezier(.2,.9,.3,1.2);transition-delay:calc(var(--i,0)*70ms + .15s)}
+.js .in .pop{opacity:1;transform:none}
+.js .sqpop{opacity:0;transform:scale(.2);transition:opacity .35s ease,transform .45s cubic-bezier(.2,.9,.3,1.4);transition-delay:calc(var(--i,0)*14ms + .2s)}
+.js .in .sqpop{opacity:1;transform:none}
+.js .hemi circle{animation:none;opacity:0}
+.js .in .hemi circle{animation:pop .5s forwards}
+.js .row .bar>i,.js .row .bar{transition-delay:.25s}
+
+
+/* glossary */
+.gloss{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 22px}
+.gloss div{padding:8px 0;border-bottom:1px dashed var(--line);font-size:15px}
+.gloss b{color:var(--navy2)}
+
+footer{margin-top:60px;background:var(--navy);color:#aeb9d6;padding:30px 0 40px;font-size:14px}
+footer a{color:#cfd9f5}
+footer .src{columns:2;column-gap:30px;font-size:13px}
+.note-sm{font-size:13px;color:var(--mute)}
+
+@media(max-width:820px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .grid2{grid-template-columns:1fr}
+  .cards{grid-template-columns:repeat(2,1fr)}
+  .watch{grid-template-columns:1fr}
+  .gloss{grid-template-columns:1fr}
+  footer .src{columns:1}
+}
+@media(max-width:480px){ body{font-size:16px} .cards{grid-template-columns:1fr} .card{padding:16px} }
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.js .pop,.js .sqpop,.js .reveal,.js .hemi circle{opacity:1!important;transform:none!important}.js .bar>i{width:var(--w)!important}.js .ring .fg{stroke-dasharray:var(--len) 999!important}}
+
+/* ---- page système électoral ---- */
+.flow{display:grid;gap:12px;margin-top:8px}
+.step{position:relative;display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.step .n{width:44px;height:44px;border-radius:50%;background:var(--navy2);color:#fff;display:grid;place-items:center;font:800 18px Georgia,serif}
+.step b{display:block;font-family:Georgia,serif;font-size:18px;line-height:1.25}
+.step span{font-size:14.5px;color:var(--mute)}
+.step .when{display:block;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--r);margin-bottom:2px}
+.step.end .n{background:var(--gold);color:#241a00}
+.flow .step:not(:last-child)::after{content:"";position:absolute;left:35px;top:56px;bottom:-12px;width:2px;background:var(--line);z-index:0}
+.tl{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.tl .y{position:relative;border-radius:14px;padding:14px 8px;text-align:center;background:var(--paper);border:1px solid var(--line)}
+.tl .y b{font:800 24px Georgia,serif;display:block}
+.tl .y span{font-size:12.5px;color:var(--mute);line-height:1.3;display:block;margin-top:2px}
+.tl .y.pres{background:var(--navy);border-color:var(--navy);color:#fff}.tl .y.pres span{color:#aeb9d6}
+.tl .y.mid{background:var(--gold);border-color:var(--gold)}.tl .y.mid span{color:#3a2b00}
+.tl .y .now{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--r);color:#fff;font-size:10px;font-weight:800;letter-spacing:.1em;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.ecwrap{position:relative;padding-top:26px}
+.ecwrap .mark270{position:absolute;top:0;bottom:-6px;left:50.19%;width:0;border-left:3px dashed var(--navy)}
+.ecwrap .mark270 em{position:absolute;top:-2px;left:8px;font-style:normal;font-size:12px;font-weight:800;color:var(--navy);white-space:nowrap}
+.ecwrap .bar{height:46px}
+.ecwrap .bar i{display:flex;align-items:center;justify-content:center;color:#fff;font:800 20px Georgia,serif}
+.eq{display:flex;flex-wrap:nowrap;gap:6px;align-items:center;font-weight:700}
+.eq .box{flex:1;text-align:center;background:var(--navy2);color:#fff;border-radius:12px;padding:8px 6px;font-size:16px}
+.eq .box small{display:block;font-weight:400;color:#aeb9d6;font-size:11.5px}
+.eq .op{flex:none;font:800 20px Georgia,serif;color:var(--mute)}
+.eq .box.g{background:var(--gold);color:#241a00}.eq .box.g small{color:#5a4300}
+.three .br3 ul{margin:8px 0 0;padding-left:0;list-style:none}
+.three .br3 li{font-size:14px;color:var(--ink);padding:6px 0;border-top:1px dashed var(--line);display:flex;gap:8px}
+.three .br3 li i{font-style:normal;flex:none}
+.three .br3 li b{display:inline;font:inherit;font-weight:700;margin:0;color:var(--navy2)}
+.three .br3 li span{font-size:14px;color:var(--ink)}
+.q{border-top:1px dashed var(--line);padding:14px 0}
+.q h4{margin:0 0 10px;font:700 17px/1.35 Georgia,serif}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opts button{font:600 15px "Segoe UI",Roboto,sans-serif;text-align:left;padding:11px 12px;min-height:46px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
+.opts button:hover:not(:disabled){border-color:var(--navy2)}
+.opts button.ok{background:#dff3e3;border-color:#2e9b4f}
+.opts button.no{background:var(--r-soft);border-color:var(--r)}
+.opts button:disabled{cursor:default}
+.q .why{display:none;margin-top:8px;font-size:14px;color:var(--mute)}
+.q.done .why{display:block}
+.score{display:none;margin-top:14px;padding:14px;border-radius:14px;background:var(--d-soft);font-size:16px}
+.score b{font:800 28px Georgia,serif;color:var(--d)}
+.btn{display:inline-block;background:var(--navy);color:#fff;text-decoration:none;font-weight:700;border-radius:999px;padding:11px 18px}
+.btn.gold{background:var(--gold);color:#241a00}
+.swing{display:flex;flex-wrap:wrap;gap:8px}
+.swing span{border-radius:999px;padding:6px 12px;font-size:14px;font-weight:700;background:#efe6c7;color:#4a3a00;border:1px solid #e1d39b}
+.swing.safe span.d{background:var(--d-soft);color:#143f91;border-color:#b9ceef}
+.swing.safe span.r{background:var(--r-soft);color:#7c1616;border-color:#ecbcbc}
+@media(max-width:820px){.tl{grid-template-columns:1fr;gap:10px}.tl .y{display:flex;align-items:center;gap:14px;text-align:left;padding:12px 14px}.tl .y b{flex:none;width:64px}.tl .y .now{top:-9px;left:auto;right:12px;transform:none}}
+@media(max-width:480px){.opts{grid-template-columns:1fr}}
+</style>
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">États-Unis · Institutions</span>
+    <h1>Comment fonctionne le <em>système électoral</em> américain</h1>
+    <p class="standfirst">Qui vote pour qui, à quelle fréquence, et qui détient vraiment le pouvoir ? L’essentiel pour comprendre la vie politique américaine.</p>
+    <div class="stats">
+      <div class="stat"><b data-count="3">3</b><span>pouvoirs</span></div>
+      <div class="stat"><b data-count="50">50</b><span>États</span></div>
+      <div class="stat"><b data-count="535">535</b><span>membres du Congrès</span></div>
+      <div class="stat"><b data-count="270">270</b><span>voix pour être élu président</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- 1 pouvoirs -->
+<section>
+  <div class="narrow">
+    <div class="tag">1 · Les institutions</div>
+    <h2>Qui détient le pouvoir ? Trois pouvoirs</h2>
+    <p class="art lead">Les États-Unis sont une <mark class="hl">république fédérale</mark> (federal republic) : le pouvoir est partagé entre le gouvernement fédéral, à Washington, D.C., et les 50 États. Au niveau fédéral, il est réparti entre <mark class="hl">trois pouvoirs</mark> (branches), pour que personne ne gouverne seul.</p>
+  </div>
+
+  <div class="card">
+    <h3>Trois pouvoirs, trois missions</h3>
+    <p class="sub">La Constitution les sépare volontairement</p>
+    <div class="three">
+      <div class="br3"><div class="ic">🏛️</div><b>Pouvoir exécutif (Executive)</b><span>Le président (et le vice-président) applique les lois, dirige l’armée et le gouvernement.</span></div>
+      <div class="br3" style="border-top-color:var(--gold)"><div class="ic">📜</div><b>Pouvoir législatif (Legislative)</b><span>Le Congrès (Congress) : Chambre des représentants + Sénat. Il écrit les lois et vote le budget fédéral.</span></div>
+      <div class="br3" style="border-top-color:var(--r)"><div class="ic">⚖️</div><b>Pouvoir judiciaire (Judicial)</b><span>La Cour suprême (Supreme Court), 9 juges, et les tribunaux fédéraux. Ils interprètent la loi et vérifient qu’elle respecte la Constitution.</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Contre-pouvoirs (checks and balances) : qui peut bloquer qui ?</h3>
+    <p class="sub">Chaque pouvoir a un moyen d’agir sur les autres</p>
+    <div class="three">
+      <div class="br3"><div class="ic">🏛️</div><b>Le président peut…</b>
+        <ul><li><i>✋</i><span>Opposer son <b>veto</b> à une loi votée par le Congrès</span></li><li><i>👩‍⚖️</i><span><b>Nommer</b> les juges de la Cour suprême (avec l’accord du Sénat)</span></li></ul></div>
+      <div class="br3" style="border-top-color:var(--gold)"><div class="ic">📜</div><b>Le Congrès peut…</b>
+        <ul><li><i>🗳️</i><span><b>Passer outre un veto</b> (override) avec les ⅔ des membres qui votent, dans chaque chambre séparément <small style="display:block;color:var(--mute)">Si tous les membres votent : 290 sur 435 à la Chambre et 67 sur 100 au Sénat.</small></span></li><li><i>✅</i><span>Le <b>Sénat</b> approuve les juges et les hauts responsables</span></li><li><i>🚪</i><span><b>Mettre en accusation</b> le président (impeachment, par la Chambre) et le destituer (par le Sénat)</span></li></ul></div>
+      <div class="br3" style="border-top-color:var(--r)"><div class="ic">⚖️</div><b>La Cour suprême peut…</b>
+        <ul><li><i>❌</i><span><b>Annuler</b> une loi ou un acte contraire à la Constitution</span></li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 cour suprême -->
+<section>
+  <div class="narrow">
+    <div class="tag">2 · La Cour suprême (Supreme Court)</div>
+    <h2>Qui sont les juges, et comment le deviennent-ils ?</h2>
+    <p class="art">La Cour suprême est la plus haute juridiction du pays. Elle peut <mark class="hl">annuler une loi</mark> qui ne respecte pas la Constitution. Ses juges ne sont pas élus : c’est <mark class="hl">le président qui les nomme</mark> (avec l’accord du Sénat), et ils siègent <mark class="hl">à vie</mark>.</p>
+  </div>
+
+  <div class="card chamber">
+    <span class="tagbox">Qui sont-ils ?</span>
+    <div class="head"><span class="num" data-count="9">9</span><h3 style="margin:0">juges (justices)</h3></div>
+    <p class="sub" style="margin:4px 0 0">1 président de la Cour (Chief Justice) + 8 juges associés (Associate Justices)</p>
+    <ul class="facts">
+      <li><i>🔢</i><span><b>Le nombre est fixé par la loi,</b> pas par la Constitution. Le Congrès l’a fait varier de 5 à 10 juges selon les époques.</span></li>
+      <li><i>📋</i><span><b>Aucune condition</b> d’âge, de nationalité ou de diplôme n’est exigée par la Constitution.</span></li>
+      <li><i>👑</i><span><b>C’est le président des États-Unis qui nomme les juges</b> (to nominate), y compris le président de la Cour (Chief Justice). Le Sénat doit ensuite approuver (to confirm) le choix.</span></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Comment un juge peut-il perdre son siège ?</h3>
+    <p class="sub">La Constitution dit que les juges gardent leur poste « pendant bonne conduite » (during good behavior)</p>
+    <div class="three">
+      <div class="br3"><div class="ic">⚰️</div><b>Décès (death)</b><span>Par exemple Antonin Scalia en 2016 et Ruth Bader Ginsburg en 2020.</span></div>
+      <div class="br3" style="border-top-color:var(--gold)"><div class="ic">🏖️</div><b>Départ volontaire (retirement)</b><span>Le juge choisit de partir. Depuis 2000, l’âge moyen de départ est d’environ 80 ans.</span></div>
+      <div class="br3" style="border-top-color:var(--r)"><div class="ic">🚪</div><b>Destitution (impeachment)</b><span>La Chambre met le juge en accusation. Le Sénat le juge : il faut les ⅔ des voix pour le destituer.</span></div>
+    </div>
+    <div class="need" style="margin-top:16px"><b>Un cas rarissime.</b> Un seul juge a été mis en accusation : Samuel Chase, en 1804. Le Sénat l’a acquitté (to acquit). Aucun juge n’a jamais été destitué.</div>
+    <p class="cap" style="margin-top:12px">Comme les juges restent en poste pendant des décennies, une nomination influence la Cour longtemps après le départ du président qui l’a faite.</p>
+  </div>
+</section>
+
+<!-- 3 congrès -->
+<section>
+  <div class="narrow">
+    <div class="tag">3 · Le Congrès (Congress)</div>
+    <h2>Deux chambres, deux façons de représenter</h2>
+    <p class="art">Le Congrès compte <mark class="hl">535 membres votants</mark> : 435 à la Chambre et 100 au Sénat. Pour adopter une loi, <mark class="hl">les deux chambres doivent s’accorder</mark>. Un parti contrôle une chambre quand il y détient la <b>majorité</b> : 218 sièges à la Chambre, 51 au Sénat.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="card chamber">
+      <span class="tagbox">Chambre basse</span>
+      <div class="head"><span class="num" data-count="435">435</span><h3 style="margin:0">Chambre des représentants (House of Representatives)</h3></div>
+      <ul class="facts">
+        <li><i>👥</i><span><b>Les sièges dépendent de la population.</b> Les grands États ont beaucoup de sièges, les petits très peu (au moins un).</span></li>
+        <li><i>🗺️</i><span><b>Un élu par circonscription (district).</b> Les électeurs de chaque circonscription choisissent un représentant.</span></li>
+        <li><i>🗓️</i><span><b>Mandat de 2 ans.</b> Toute la Chambre est renouvelée tous les deux ans.</span></li>
+      </ul>
+    </div>
+    <div class="card chamber">
+      <span class="tagbox fix">Chambre haute</span>
+      <div class="head"><span class="num" data-count="100">100</span><h3 style="margin:0">Sénat (Senate)</h3></div>
+      <ul class="facts">
+        <li><i>🟰</i><span><b>Fixe : 2 sénateurs par État.</b> 50 États × 2 = 100, quelle que soit la population.</span></li>
+        <li><i>🗺️</i><span><b>Vote dans tout l’État.</b> Tous les électeurs d’un État choisissent leurs sénateurs.</span></li>
+        <li><i>🗓️</i><span><b>Mandat de 6 ans.</b> Un tiers des sièges est renouvelé tous les deux ans.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Siège fixe ou proportionnel : la Californie et le Wyoming</h3>
+    <p class="sub">Population : recensement de 2020. Chaque carré = un siège ou un poste.</p>
+    <div class="vs3">
+      <div class="blk"><h4>Sièges à la Chambre <span class="tagbox">proportionnel</span></h4>
+        <div class="row2"><span><b>Californie</b> <small>39,5 M d’habitants</small></span><span>52</span></div><div class="st" id="caH"></div>
+        <div class="row2"><span><b>Wyoming</b> <small>577 000 habitants</small></span><span>1</span></div><div class="st one" id="wyH"></div></div>
+      <div class="blk"><h4>Sièges au Sénat <span class="tagbox fix">fixe</span></h4>
+        <div class="row2"><span><b>Californie</b> <small>39,5 M d’habitants</small></span><span>2</span></div><div class="st s" id="caS"></div>
+        <div class="row2"><span><b>Wyoming</b> <small>577 000 habitants</small></span><span>2</span></div><div class="st s" id="wyS"></div></div>
+      <div class="blk"><h4>Gouverneur (governor) <span class="tagbox fix">1 par État</span></h4>
+        <div class="row2"><span><b>Californie</b> <small>39,5 M d’habitants</small></span><span>1</span></div><div class="st s" id="caG"></div>
+        <div class="row2"><span><b>Wyoming</b> <small>577 000 habitants</small></span><span>1</span></div><div class="st s" id="wyG"></div></div>
+    </div>
+    <p class="cap">La Chambre reflète la population ; le Sénat donne le même poids à chaque État.</p>
+  </div>
+</section>
+
+<!-- 4 calendrier -->
+<section>
+  <div class="narrow">
+    <div class="tag">4 · Le calendrier</div>
+    <h2>À quelle fréquence les Américains votent-ils ?</h2>
+    <p class="art">Les élections suivent un calendrier fixe, avec le <mark class="hl">jour du scrutin (Election Day) : le mardi qui suit le premier lundi de novembre</mark>. Le président est choisi tous les quatre ans. Entre-temps, les élections de mi-mandat (midterms) renouvellent le Congrès.</p>
+  </div>
+
+  <div class="card">
+    <h3>Un cycle de quatre ans</h3>
+    <p class="sub">Exemple : le cycle qui comprend 2026</p>
+    <div class="tl">
+      <div class="y pres"><b>2024</b><span>Élection présidentielle<br>+ Chambre + ⅓ du Sénat</span></div>
+      <div class="y"><b>2025</b><span>Le nouveau président prend ses fonctions le 20 janvier</span></div>
+      <div class="y mid"><span class="now">MAINTENANT</span><b>2026</b><span>Mi-mandat (midterms)<br>Chambre + ⅓ du Sénat</span></div>
+      <div class="y"><b>2027</b><span>Aucune élection fédérale</span></div>
+      <div class="y pres"><b>2028</b><span>Prochaine présidentielle<br>+ Chambre + ⅓ du Sénat</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Combien dure chaque mandat (term) ?</h3>
+    <p class="sub">Plus le mandat est long, plus les électeurs attendent pour changer d’avis</p>
+    <div class="row"><div class="t"><span>Représentant (Representative)</span><span>2 ans</span></div><div class="bar"><i class="bd" style="--w:33.3%"></i></div></div>
+    <div class="row"><div class="t"><span>Président (2 mandats maximum)</span><span>4 ans</span></div><div class="bar"><i class="bd" style="--w:66.6%"></i></div></div>
+    <div class="row"><div class="t"><span>Sénateur (Senator)</span><span>6 ans</span></div><div class="bar"><i class="bd" style="--w:100%"></i></div></div>
+  </div>
+</section>
+
+<!-- 5 collège électoral -->
+<section>
+  <div class="narrow">
+    <div class="tag">5 · Le collège électoral (Electoral College)</div>
+    <h2>Pourquoi 270 est le chiffre magique</h2>
+    <p class="art">Les Américains ne votent pas directement pour le président. Chaque État dispose d’un certain nombre de « grands électeurs » (electoral votes). Il y en a <mark class="hl">538 au total</mark> et un candidat doit en obtenir <mark class="hl">au moins 270</mark>, la majorité, pour gagner.</p>
+    <p class="art"><b>Le vainqueur rafle tout (winner takes all).</b> Dans 48 des 50 États et à Washington, D.C., le candidat arrivé en tête <mark class="hl">remporte tous les grands électeurs de l’État</mark>, même avec une très faible avance. Seuls le Maine et le Nebraska répartissent leurs voix.</p>
+  </div>
+
+  <div class="card">
+    <h3>Exemple : le résultat de 2024</h3>
+    <p class="sub">Grands électeurs · 270 nécessaires pour gagner</p>
+    <div class="ecwrap">
+      <div class="mark270"><em>270 nécessaires</em></div>
+      <div class="bar"><i class="bd" style="--w:42.01%">226</i><i class="br" style="--w:57.99%">312</i></div>
+    </div>
+    <div class="lbl"><span class="d">Kamala Harris (démocrate) · 226</span><span class="r">Donald Trump (républicain) · 312</span></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>⚠️ Plus de voix ≠ victoire</h3>
+      <p class="sub" style="margin-bottom:8px">Un candidat peut gagner le vote populaire et perdre l’élection</p>
+      <p style="margin:0">Le « vote populaire » (popular vote) est le nombre total de voix dans tout le pays. En <b>2016</b>, Hillary Clinton a obtenu environ 2,9 millions de voix de plus que Donald Trump, mais Trump a eu plus de grands électeurs et est devenu président. Cela s’est produit lors de cinq élections présidentielles.</p>
+    </div>
+    <div class="card">
+      <h3>🎯 États pivots (swing states)</h3>
+      <p class="sub" style="margin-bottom:8px">Là où l’élection se joue vraiment</p>
+      <p style="margin:0 0 10px">Certains États votent toujours pour le même parti (les « États sûrs »). D’autres peuvent basculer : ce sont les <b>États pivots</b>. Les candidats y passent l’essentiel de leur campagne.</p>
+      <div class="swing"><span>Pennsylvanie</span><span>Michigan</span><span>Wisconsin</span><span>Géorgie</span><span>Arizona</span><span>Nevada</span><span>Caroline du Nord</span></div>
+      <div class="swing safe" style="margin-top:8px"><span class="d">Californie : sûre pour les démocrates</span><span class="r">Texas : sûr pour les républicains</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 partis -->
+<section>
+  <div class="narrow">
+    <div class="tag">6 · Les deux camps</div>
+    <h2>Républicains contre démocrates</h2>
+    <p class="art">Deux partis dominent la vie politique américaine. D’autres partis et des candidats indépendants existent, mais ils <mark class="hl">ne remportent presque jamais</mark> un siège au Congrès ni la Maison-Blanche.</p>
+  </div>
+  <div class="grid2" style="align-items:stretch">
+    <div class="camp rep" style="margin-top:26px">
+      <div class="ch"><div class="badge">GOP</div><div><h3>Républicains (Republicans)</h3><small>Rouge · symbole : l’éléphant 🐘</small></div></div>
+      <div class="cb">
+        <h5>Valeurs principales</h5>
+        <div class="vals"><span>💵 Impôts bas</span><span>🏢 État réduit</span><span>🛂 Contrôle des frontières</span><span>🔫 Droit de porter des armes</span><span>🛡️ Armée forte</span><span>⛪ Valeurs traditionnelles</span></div>
+        <h5>Figures connues</h5>
+        <div class="ppl">
+          <div class="pp"><i>DT</i><div><b>Donald Trump</b><span>Président</span></div></div>
+          <div class="pp"><i>JV</i><div><b>JD Vance</b><span>Vice-président</span></div></div>
+          <div class="pp"><i>RR</i><div><b>Ronald Reagan</b><span>Président 1981–89</span></div></div>
+          <div class="pp"><i>AL</i><div><b>Abraham Lincoln</b><span>1er président républicain</span></div></div>
+          <div class="pp"><i>GA</i><div><b>Greg Abbott</b><span>Gouverneur du Texas</span></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="camp dem" style="margin-top:26px">
+      <div class="ch"><div class="badge">DEM</div><div><h3>Démocrates (Democrats)</h3><small>Bleu · symbole : l’âne 🫏</small></div></div>
+      <div class="cb">
+        <h5>Valeurs principales</h5>
+        <div class="vals"><span>🏥 Accès aux soins</span><span>🌱 Action pour le climat</span><span>⚖️ Avortement &amp; droits civiques</span><span>🎓 École publique</span><span>🤝 Réduire les inégalités</span><span>👷 Droits des travailleurs</span></div>
+        <h5>Figures connues</h5>
+        <div class="ppl">
+          <div class="pp"><i>BO</i><div><b>Barack Obama</b><span>Président 2009–17</span></div></div>
+          <div class="pp"><i>JB</i><div><b>Joe Biden</b><span>Président 2021–25</span></div></div>
+          <div class="pp"><i>KH</i><div><b>Kamala Harris</b><span>Vice-présidente 2021–25</span></div></div>
+          <div class="pp"><i>GN</i><div><b>Gavin Newsom</b><span>Gouverneur de Californie</span></div></div>
+          <div class="pp"><i>AO</i><div><b>Alexandria Ocasio-Cortez</b><span>Représentante, New York</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="note-sm" style="margin-top:12px">Présentation simplifiée : chaque parti contient des courants modérés et radicaux, et les positions évoluent avec le temps.</p>
+</section>
+
+<!-- quiz -->
+<section>
+  <div class="card">
+    <h3>Testez-vous</h3>
+    <p class="sub">7 questions · touchez une réponse</p>
+    <div id="quiz"></div>
+    <div class="score" id="score"></div>
+  </div>
+</section>
+
+<!-- vocabulaire -->
+<section>
+  <div class="card">
+    <h3>Vocabulaire clé</h3>
+    <p class="sub">Mots anglais de la page · traduction et définition en français</p>
+    <div class="gloss">
+      <div><b>branch of government</b> → <i>pouvoir (exécutif, législatif, judiciaire)</i><br>Une des trois parties du pouvoir d’État.</div>
+      <div><b>checks and balances</b> → <i>équilibre des pouvoirs</i><br>Système où chaque pouvoir peut limiter les deux autres.</div>
+      <div><b>federal / state</b> → <i>fédéral / État</i><br>Le gouvernement fédéral est national ; chaque État a aussi ses lois.</div>
+      <div><b>Congress</b> → <i>Congrès</i><br>Parlement américain : Chambre des représentants + Sénat.</div>
+      <div><b>House of Representatives</b> → <i>Chambre des représentants</i><br>435 élus, répartis selon la population.</div>
+      <div><b>Senate / senator</b> → <i>Sénat / sénateur</i><br>100 élus, 2 par État.</div>
+      <div><b>district</b> → <i>circonscription</i><br>Zone qui élit un représentant.</div>
+      <div><b>term</b> → <i>mandat</i><br>Durée pendant laquelle un élu exerce sa fonction.</div>
+      <div><b>governor</b> → <i>gouverneur</i><br>Chef de l’exécutif d’un État.</div>
+      <div><b>Supreme Court</b> → <i>Cour suprême</i><br>Plus haute juridiction du pays, 9 juges.</div>
+      <div><b>Chief Justice</b> → <i>président de la Cour suprême</i><br>Juge qui dirige la Cour ; les 8 autres sont des « Associate Justices ».</div>
+      <div><b>to nominate</b> → <i>nommer, proposer un candidat</i><br>Le président choisit la personne qu’il propose.</div>
+      <div><b>to confirm</b> → <i>confirmer, approuver</i><br>Le Sénat approuve une nomination par un vote.</div>
+      <div><b>filibuster</b> → <i>obstruction parlementaire</i><br>Moyen de retarder ou bloquer un vote au Sénat.</div>
+      <div><b>life tenure</b> → <i>mandat à vie</i><br>Le juge garde son poste tant qu’il ne démissionne pas.</div>
+      <div><b>impeachment</b> → <i>mise en accusation (destitution)</i><br>Procédure pour accuser, puis démettre, un responsable.</div>
+      <div><b>to acquit</b> → <i>acquitter</i><br>Déclarer une personne non coupable.</div>
+      <div><b>veto</b> → <i>veto</i><br>Refus du président de signer une loi votée par le Congrès.</div>
+      <div><b>to override a veto</b> → <i>passer outre un veto</i><br>Adopter la loi malgré le veto : ⅔ des suffrages exprimés dans chaque chambre.</div>
+      <div><b>Electoral College</b> → <i>collège électoral</i><br>Les 538 grands électeurs qui élisent le président.</div>
+      <div><b>popular vote</b> → <i>vote populaire</i><br>Nombre total de voix des citoyens dans le pays.</div>
+      <div><b>swing state</b> → <i>État pivot</i><br>État où le résultat est incertain et peut décider l’élection.</div>
+      <div><b>winner takes all</b> → <i>le vainqueur rafle tout</i><br>Le gagnant d’un État obtient tous ses grands électeurs.</div>
+      <div><b>midterms</b> → <i>élections de mi-mandat</i><br>Élections du Congrès, au milieu du mandat du président.</div>
+      <div><b>majority</b> → <i>majorité</i><br>Plus de la moitié des sièges.</div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b style="color:#fff">Sources</b></p>
+    <div class="src">
+      <p>U.S. National Archives, « Distribution of Electoral Votes » (<a href="https://archives.gov/electoral-college/allocation">archives.gov/electoral-college/allocation</a>) et « 2024 Electoral College Results » (<a href="https://www.archives.gov/electoral-college/2024">archives.gov/electoral-college/2024</a>)</p>
+      <p>Congressional Research Service, « Electoral College Overview » (IF12682) et « The Electoral College: Frequently Asked Questions » (R48936)</p>
+      <p>USAFacts, « Electoral College: how states are represented » (usafacts.org)</p>
+      <p>Supreme Court of the United States, « Frequently Asked Questions » (<a href="https://www.supremecourt.gov/about/faq_general.aspx">supremecourt.gov</a>) ; National Constitution Center, « Constitution 101 : The Supreme Court » (constitutioncenter.org)</p>
+      <p>Congressional Research Service, « Supreme Court Appointment Process: President’s Selection of a Nominee » (R44235) et « Senate Proceedings Establishing Majority Cloture for Supreme Court Nominations » (R44819)</p>
+      <p>U.S. Senate, « Judicial Nominations Overview » (<a href="https://www.senate.gov/about/powers-procedures/nominations/judicial-nominations-overview.htm">senate.gov</a>) ; Reuters, « For aging justices, politics of retirement looms large » (20 avril 2026)</p>
+      <p>Congressional Research Service, « Veto Override Procedure in the House and Senate » (RS22654)</p>
+      <p>Constitution des États-Unis (articles I, II et III ; 12<sup>e</sup> et 20<sup>e</sup> amendements)</p>
+      <p>Résultats des élections de 2026 : voir notre article <a href="midterms-2026.html">Midterms 2026: Democrats Take Control of Congress</a></p>
+    </div>
+    <p style="margin-top:18px">Powered by Maxens Blanchet</p>
+  </div>
+</footer>
+
+
+<script>
+(function(){
+  function fill(id,n){var el=document.getElementById(id);for(var i=0;i<n;i++){el.appendChild(document.createElement('i'));}}
+  fill('caH',52);fill('wyH',1);fill('caS',2);fill('wyS',2);fill('caG',1);fill('wyG',1);
+
+  document.querySelectorAll('.card,.camp,.narrow>*').forEach(function(e){e.classList.add('reveal')});
+  document.querySelectorAll('.card .br3,.facts li,.vals span,.pp,.card .row,.step,.tl .y,.swing span,.eq .box').forEach(function(e){
+    var sib=Array.prototype.indexOf.call(e.parentNode.children,e);e.style.setProperty('--i',sib);e.classList.add('pop');});
+  document.querySelectorAll('.st i').forEach(function(e){
+    var sib=Array.prototype.indexOf.call(e.parentNode.children,e);e.style.setProperty('--i',sib);e.classList.add('sqpop');});
+
+  function count(el){
+    var to=+el.getAttribute('data-count'),t0=null,dur=1300;
+    function step(t){if(!t0)t0=t;var k=Math.min(1,(t-t0)/dur);k=1-Math.pow(1-k,3);el.textContent=Math.round(to*k);if(k<1)requestAnimationFrame(step);}
+    el.textContent='0';requestAnimationFrame(step);
+  }
+  var targets=document.querySelectorAll('.reveal,.bar,.ring,.stats');
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function show(t){t.classList.add('in');t.querySelectorAll('[data-count]').forEach(function(c){if(!reduce)count(c)});if(t.hasAttribute&&t.hasAttribute('data-count')&&!reduce)count(t);}
+  if(!('IntersectionObserver' in window)){targets.forEach(function(t){t.classList.add('in')});return;}
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){show(e.target);io.unobserve(e.target);}})},{threshold:.12});
+  targets.forEach(function(t){io.observe(t)});
+})();
+</script>
+<script>
+(function(){
+  var ms=[].slice.call(document.querySelectorAll('mark.hl'));
+  function on(m){m.classList.add('on')}
+  if(!('IntersectionObserver' in window)){ms.forEach(on);return;}
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting){on(e.target);io.unobserve(e.target);}
+  })},{rootMargin:'0px 0px -35% 0px',threshold:0});
+  ms.forEach(function(m){
+    var sibs=[].slice.call(m.parentNode.querySelectorAll('mark.hl'));
+    m.style.setProperty('--d',(0.45+0.18*sibs.indexOf(m))+'s');
+    io.observe(m);
+  });
+})();
+</script>
+<script>
+(function(){
+  var Q=[{"q": "Combien de voix de grands électeurs faut-il pour être élu président ?", "o": ["218", "270", "435", "538"], "a": 1, "w": "Il y a 538 grands électeurs au total : la majorité est donc de 270."}, {"q": "Quelle est la durée du mandat d’un sénateur américain ?", "o": ["2 ans", "4 ans", "6 ans", "8 ans"], "a": 2, "w": "Les sénateurs sont élus pour 6 ans, les représentants pour 2 ans et le président pour 4 ans."}, {"q": "Quelle chambre donne exactement deux membres à chaque État ?", "o": ["La Chambre des représentants", "Le Sénat", "La Cour suprême", "Le collège électoral"], "a": 1, "w": "Chaque État a 2 sénateurs, quelle que soit sa population."}, {"q": "Qui peut opposer son veto à une loi votée par le Congrès ?", "o": ["Le vice-président", "Le président de la Chambre", "Le président", "La Cour suprême"], "a": 2, "w": "Le président peut opposer son veto. Le Congrès peut passer outre si les deux tiers des membres qui votent l’approuvent, dans chaque chambre."}, {"q": "En 2016, Hillary Clinton a obtenu plus de voix dans tout le pays mais n’est pas devenue présidente. Pourquoi ?", "o": ["Des voix ont été comptées deux fois", "Donald Trump a obtenu plus de grands électeurs", "Elle n’avait pas la nationalité américaine", "Le Sénat a voté contre elle"], "a": 1, "w": "Le président est choisi par le collège électoral, pas par le vote populaire national."}, {"q": "Lors des élections de mi-mandat, les électeurs ne choisissent PAS…", "o": ["Les représentants", "Une partie des sénateurs", "Le président", "De nombreux gouverneurs"], "a": 2, "w": "Le président est élu tous les 4 ans, lors des années de présidentielle (2024, 2028…)."}, {"q": "Comment un juge de la Cour suprême peut-il perdre son siège contre sa volonté ?", "o": ["Le président peut le renvoyer", "Par destitution : accusé par la Chambre, puis condamné par le Sénat", "Il doit partir à 70 ans", "Son mandat dure 12 ans"], "a": 1, "w": "Les juges sont nommés à vie. Seule la destitution peut les écarter contre leur gré, et aucun juge n’a jamais été destitué."}];
+  var box=document.getElementById('quiz'),score=document.getElementById('score'),done=0,good=0;
+  Q.forEach(function(it,qi){
+    var d=document.createElement('div');d.className='q';
+    var h=document.createElement('h4');h.textContent=(qi+1)+'. '+it.q;d.appendChild(h);
+    var os=document.createElement('div');os.className='opts';
+    it.o.forEach(function(t,oi){
+      var b=document.createElement('button');b.type='button';b.textContent=t;
+      b.addEventListener('click',function(){
+        if(d.classList.contains('done'))return;
+        d.classList.add('done');done++;
+        [].forEach.call(os.children,function(x,k){x.disabled=true;if(k===it.a)x.classList.add('ok');});
+        if(oi===it.a){good++;}else{b.classList.add('no');}
+        if(done===Q.length){
+          score.style.display='block';
+          score.innerHTML='Votre score : <b>'+good+' / '+Q.length+'</b> '+(good===Q.length?'🎉 Parfait !':good>=5?'👏 Bravo !':'💪 Relisez la page et réessayez.')+' <br><button type="button" class="btn" id="retry" style="border:0;cursor:pointer;margin-top:10px">Recommencer</button>';
+          document.getElementById('retry').addEventListener('click',function(){location.reload();});
+        }
+      });
+      os.appendChild(b);
+    });
+    d.appendChild(os);
+    var w=document.createElement('div');w.className='why';w.textContent='✔ '+it.w;d.appendChild(w);
+    box.appendChild(d);
+  });
+})();
+</script>
+
+<script src="assets/app-nav.js"></script>
+</body>
+</html>
